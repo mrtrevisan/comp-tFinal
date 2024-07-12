@@ -1,0 +1,13 @@
+S
+[S, A, B, C]
+[a, b]
+S -> aA
+S -> bB
+S -> &
+A -> aS
+A -> bC
+B -> bS
+B -> aA
+C -> aC
+C -> bA
+C -> &
