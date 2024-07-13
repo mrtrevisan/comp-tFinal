@@ -8,40 +8,53 @@ class Grammar:
     def parse(self, word):
         derivation = []
         curr_word = ""
-        if self._parse_recursive(self.start_symbol, word, derivation):
-            for d in derivation:
-                print('Derivação: ', d)
-                curr_word = curr_word.replace(d.split(' -> ')[0], d.split(' -> ')[1]) if curr_word else d.split(' -> ')[1] 
-                print(curr_word)
+        ok = self._parse_recursive(self.start_symbol, word, derivation)
 
-            return True
-        else:
-            return False
+        for d in derivation:
+            print('Derivação: ', d)
+            curr_word = curr_word.replace(d.split(' -> ')[0], d.split(' -> ')[1]) if curr_word else d.split(' -> ')[1] 
+            print(curr_word)
+        return ok
 
     def _parse_recursive(self, current_symbol, remaining_word, derivation):
+        # se acabou a palavra e os símbolos não-terminais
+        # aceita
         if not remaining_word and not current_symbol:
             return True
 
+        # acabou a palavra mas resta um símbolo não-terminal
+        # verifica se esse símbolo deriva para vazio
         if not remaining_word:
             if '&' in self.rules.get(current_symbol, []):
                 derivation.append(f"{current_symbol} -> &")
                 return True
-            return False
+            else:
+                print("Esperado algum símbolo: ", list(map(lambda x : x[0], self.rules.get(current_symbol, []))) )
+                return False
 
+        # resta símbolos a processar
         for rule in self.rules.get(current_symbol, []):
+            # se derivar para vazio
             if rule == '&':
+                # verifica o resto da palavra
                 derivation.append(f"{current_symbol} -> &")
                 if self._parse_recursive('', remaining_word, derivation):
+                    # derivação válida para vazio, retorna true
                     return True
+                # não pode derivar para vazio aqui
                 derivation.pop()
+            # derivação para símbolo
             elif remaining_word.startswith(rule[0]):
                 derivation.append(f"{current_symbol} -> {rule}")
-
+                # remove o símbolo da entrada e continua
                 new_current_symbol = rule[1:] if len(rule) > 1 else ''
                 if self._parse_recursive(new_current_symbol + current_symbol[1:], remaining_word[1:], derivation):
                     return True
-                derivation.pop()
-
+                # derivation.pop()
+        if (remaining_word[0] not in list(map(lambda x : x[0], self.rules.get(current_symbol, []))) ):
+            print("Caracter inesperado na entrada: ", remaining_word[0])
+            self._parse_recursive(current_symbol, remaining_word[1:], derivation)
+            return False
         return False
 
 def read_grammar(file_path):
@@ -79,7 +92,9 @@ def read_grammar(file_path):
             if lhs not in rules:
                 rules[lhs] = []
             rules[lhs].append(rhs)
-        
+
+        rules = {key: sorted(values, key=lambda x: (x == '&', x)) for key, values in rules.items()}
+
         return Grammar(start_symbol, non_terminals, terminals, rules)
 
 if __name__ == "__main__":
