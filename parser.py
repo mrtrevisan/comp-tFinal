@@ -10,10 +10,11 @@ class Grammar:
         curr_word = ""
         ok = self._parse_recursive(self.start_symbol, word, derivation)
 
+        print()
         for d in derivation:
-            print('Derivação: ', d)
+            print(f'[*] Ação: ', d)
             curr_word = curr_word.replace(d.split(' -> ')[0], d.split(' -> ')[1]) if curr_word else d.split(' -> ')[1] 
-            print(curr_word)
+            print(f'\t{curr_word}')
         return ok
 
     def _parse_recursive(self, current_symbol, remaining_word, derivation):
@@ -29,9 +30,19 @@ class Grammar:
                 derivation.append(f"{current_symbol} -> &")
                 return True
             else:
-                print("Esperado algum símbolo: ", list(map(lambda x : x[0], self.rules.get(current_symbol, []))) )
-                return False
+                expected = list(map(lambda x : x[0], self.rules.get(current_symbol, [])))
+                print("[!] Esperado algum símbolo: ", expected)
+                # derivation.append(f"{expected} -> Esperado")
 
+                return False
+            
+        if current_symbol and (remaining_word[0] not in list(map(lambda x : x[0], self.rules.get(current_symbol, []))) ):
+            print("[!] Caracter inesperado na entrada: ", remaining_word[0])
+            # derivation.append(f"{remaining_word[0]} -> Descartado")
+            
+            self._parse_recursive(current_symbol, remaining_word[1:], derivation)
+            return False
+        
         # resta símbolos a processar
         for rule in self.rules.get(current_symbol, []):
             # se derivar para vazio
@@ -51,10 +62,6 @@ class Grammar:
                 if self._parse_recursive(new_current_symbol + current_symbol[1:], remaining_word[1:], derivation):
                     return True
                 # derivation.pop()
-        if (remaining_word[0] not in list(map(lambda x : x[0], self.rules.get(current_symbol, []))) ):
-            print("Caracter inesperado na entrada: ", remaining_word[0])
-            self._parse_recursive(current_symbol, remaining_word[1:], derivation)
-            return False
         return False
 
 def read_grammar(file_path):
@@ -114,6 +121,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if grammar.parse(word):
-        print(f"A palavra '{word}' é aceita pela gramática.")
+        print(f"\n-> A palavra '{word}' é aceita pela gramática.")
     else:
-        print(f"A palavra '{word}' não é aceita pela gramática.")
+        print(f"\n-> A palavra '{word}' NÃO é aceita pela gramática.")
