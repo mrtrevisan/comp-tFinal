@@ -8,7 +8,7 @@ class Grammar:
         self.rules = rules
 
     # retorna a substring terminal (mais a esquerda) na string passada
-    def get_terminal_substring(self, str : str):
+    def get_terminal_substring(self, str : str) -> str:
         for i, char in enumerate(str):
             if char in self.non_terminals:
                 return str[:i]
@@ -159,6 +159,8 @@ def main() -> None:
         print(f"\n-> A palavra '{word}' é aceita pela gramática.")
     else:
         print(f"\n-> A palavra '{word}' NÃO é aceita pela gramática.")
+
+    return
 
 if __name__ == "__main__":
     main()
