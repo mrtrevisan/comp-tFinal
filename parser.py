@@ -75,7 +75,7 @@ class Grammar:
             else:
                 # calcula o fim dos terminais na derivação
                 terminal_end = 0
-                while rule[terminal_end] in self.terminals:
+                while terminal_end < len(rule) and rule[terminal_end] in self.terminals:
                     terminal_end += 1
 
                 # se a derivação é aplicável
@@ -84,7 +84,9 @@ class Grammar:
                     # calcula o novo símbolo
                     new_current_symbol = rule[terminal_end:] if len(rule) > terminal_end else ''
                     # continua
-                    return self._parse_recursive(new_current_symbol + current_symbol[1:], remaining_word[terminal_end:], derivation)
+                    if self._parse_recursive(new_current_symbol + current_symbol[1:], remaining_word[terminal_end:], derivation):
+                        return True
+                    derivation.pop()
         
         # se nada der certo, não aceita
         return False

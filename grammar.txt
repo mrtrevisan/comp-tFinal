@@ -1,7 +1,7 @@
 S
 [S, A, B, C]
-[a, b]
-S -> aA
+[a, b, k]
+S -> akA
 S -> bB
 S -> &
 A -> aS

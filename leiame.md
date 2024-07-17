@@ -17,6 +17,8 @@ L4 ... : Regras de derivação.
 
 Não é suportado o uso de 'ou', '|', para as regras de derivação, logo cada regra deve ser descrita exclusivamente no formato "Estado -> terminaisNovoEstado"
 
+Definição formal do arquivo grammar.txt:
+
 G = (V, T, P, S)
 
 V (Símbolos Não Terminais): { S, A, A', B, B', C, R, R', I, N, T }

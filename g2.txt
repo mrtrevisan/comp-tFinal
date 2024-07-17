@@ -1,0 +1,8 @@
+A
+[A, B, C]
+[a, b]
+A -> aaB
+B -> aB
+B -> bB
+B -> aC
+C -> a
