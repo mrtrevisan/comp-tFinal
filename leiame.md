@@ -15,4 +15,21 @@ L2: Símbolos não terminais
 L3: Símbolos terminais  
 L4 ... : Regras de derivação.
 
-Nao e suportado o uso de 'ou','|' para as regras de derivacao, logo cada regra deve ser descrita exclusivamente no formato "Estado -> *terminais*NovoEstado"
+Não é suportado o uso de 'ou', '|', para as regras de derivação, logo cada regra deve ser descrita exclusivamente no formato "Estado -> terminaisNovoEstado"
+
+G = (V, T, P, S)
+
+V (Símbolos Não Terminais): { S, A, A', B, B', C, R, R', I, N, T }
+T (Símbolos Terminais): { símbolo inicial, símbolos não terminais, símbolos terminais, \n, ], [, -> }
+P (Regras de Produção):
+  S → I \n A
+  A → [A'] \n B
+  A' → N | N,A'
+  B → [B'] \n C
+  B' → T | T,B'
+  C → R | R \n C
+  R → N -> R' | N -> R'N
+  R' → T | TR'
+  I → símbolo inicial
+  N → símbolos não terminais
+  T → símbolos terminais
